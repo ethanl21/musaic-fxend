@@ -55,7 +55,7 @@ export const SignUpForm = ({ searchParams }: { searchParams: Message }) => {
 						<SiGoogle className="absolute left-2"></SiGoogle>
 						Sign up with Google
 					</Button>
-					<Button className="relative bg-[#181717] hover:bg-[#464545]">
+					<Button className="relative bg-[#181717] hover:bg-[#464545] dark:bg-[#676565] dark:hover:bg-[#454444]">
 						<SiGithub className="absolute left-2"></SiGithub>
 						Sign up with GitHub
 					</Button>
