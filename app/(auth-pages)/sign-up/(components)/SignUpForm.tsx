@@ -41,7 +41,7 @@ export const SignUpForm = ({ searchParams }: { searchParams: Message }) => {
 				</form>
 				<Separator className="w-full mb-2" />
 				<div className="flex flex-col justify-start items-stretch space-y-2">
-				<OAuthButtons actionType="signUp"></OAuthButtons>
+					<OAuthButtons actionType="signUp"></OAuthButtons>
 				</div>
 			</div>
 		</>

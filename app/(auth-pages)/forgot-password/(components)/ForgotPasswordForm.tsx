@@ -6,7 +6,11 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
-export const ForgotPasswordForm = ({ searchParams }: { searchParams: Message }) => {
+export const ForgotPasswordForm = ({
+	searchParams,
+}: {
+	searchParams: Message;
+}) => {
 	return (
 		<>
 			<form className="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-96 max-w-96 mx-auto">
