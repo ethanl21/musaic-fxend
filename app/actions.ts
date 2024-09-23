@@ -4,6 +4,7 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Provider } from "@supabase/supabase-js";
 
 export const signUpAction = async (formData: FormData) => {
 	const email = formData.get("email")?.toString();
@@ -51,6 +52,25 @@ export const signInAction = async (formData: FormData) => {
 
 	return redirect("/protected");
 };
+
+export const signInOAuthAction = async (provider: string) => {
+	"use server";
+	console.log("Sign in with " + provider);
+	const supabase = createClient();
+	const origin = headers().get("origin");
+
+	const { error, data } = await supabase.auth.signInWithOAuth({ provider: provider as Provider,
+		options: {
+			redirectTo: `${origin}/auth/callback?redirect_to=/protected`,
+		}
+	 });
+
+	if (error) {
+		return encodedRedirect("error", "/sign-in", error.message);
+	}
+
+	return redirect(data.url);
+}
 
 export const forgotPasswordAction = async (formData: FormData) => {
 	const email = formData.get("email")?.toString();
