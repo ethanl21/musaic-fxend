@@ -28,7 +28,6 @@ export default async function ProtectedPage() {
 					{JSON.stringify(user, null, 2)}
 				</pre>
 			</div>
-			
 		</div>
 	);
 }
