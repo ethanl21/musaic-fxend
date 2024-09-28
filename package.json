@@ -11,9 +11,11 @@
     "pretest": "pnpm run lint"
   },
   "dependencies": {
+    "@icons-pack/react-simple-icons": "^10.0.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
@@ -46,5 +48,9 @@
     "tailwindcss": "3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.3.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": "next lint --cache --fix",
+    "*.{json,js,ts,jsx,tsx,html,md,css}": "prettier --write"
   }
 }
