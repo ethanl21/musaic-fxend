@@ -4,7 +4,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --loglevel warn --write \"**/*.{ts,tsx,css,md}\"",
+    "format": "prettier --log-level warn --write \"**/*.{ts,tsx,css,md}\"",
     "posttest": "pnpm run format",
     "prepare": "husky",
     "lint": "next lint",
