@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { HashToSearch } from "@/app/(components)/HashToSearch";
 
 export const ForgotPasswordForm = ({
 	searchParams,
@@ -13,6 +14,7 @@ export const ForgotPasswordForm = ({
 }) => {
 	return (
 		<>
+			<HashToSearch />
 			<form className="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-96 max-w-96 mx-auto">
 				<div>
 					<h1 className="">Reset Password</h1>

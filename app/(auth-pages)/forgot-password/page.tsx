@@ -8,6 +8,7 @@ export default function ForgotPassword({
 }) {
 	return (
 		<>
+			
 			<ForgotPasswordForm searchParams={searchParams} />
 		</>
 	);

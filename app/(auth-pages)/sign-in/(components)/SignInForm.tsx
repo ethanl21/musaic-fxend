@@ -1,3 +1,4 @@
+import { HashToSearch } from "@/app/(components)/HashToSearch";
 import { OAuthButtons } from "@/app/(components)/OAuthButtons";
 import { signInAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
@@ -11,6 +12,7 @@ import Link from "next/link";
 export const LogInForm = ({ searchParams }: { searchParams: Message }) => {
 	return (
 		<>
+			<HashToSearch />
 			<div className="flex flex-col gap-2 min-w-72 max-w-72">
 				<form className="flex-1 flex flex-col min-w-64 space-y-2.5">
 					<h1>Sign in</h1>

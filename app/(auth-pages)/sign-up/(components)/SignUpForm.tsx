@@ -6,10 +6,12 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { FormMessage, Message } from "@/components/form-message";
 import { OAuthButtons } from "@/app/(components)/OAuthButtons";
+import { HashToSearch } from "@/app/(components)/HashToSearch";
 
 export const SignUpForm = ({ searchParams }: { searchParams: Message }) => {
 	return (
 		<>
+			<HashToSearch />
 			<div className="flex flex-col gap-2 min-w-72 max-w-72">
 				<form className="flex flex-col mx-auto w-full space-y-2.5">
 					<h1>Sign Up</h1>
