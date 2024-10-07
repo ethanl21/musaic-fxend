@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
+import { Headphones } from "lucide-react";
 
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -31,14 +32,35 @@ export default function RootLayout({
 				>
 					<main className="min-h-screen flex flex-col items-center">
 						<div className="flex-1 w-full flex flex-col gap-20 items-center">
-							<nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-								<div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-									<div className="flex gap-5 items-center font-semibold">
-										<Link href={"/"}>Musaic</Link>
+							<div className="w-full flex justify-center border-b border-b-foreground/10 h-16">
+								<header className="w-full max-w-5xl px-4 lg:px-6 h-14 flex items-center justify-between">
+									<Link
+										className="flex flex-row items-center space-x-2 font-semibold"
+										href="/"
+									>
+										<Headphones className="h-6 w-6" />
+										<span className="align-middle text-2xl">Musaic</span>
+									</Link>
+									<nav className="ml-auto flex gap-4 sm:gap-6 float-end">
+										<Link
+											className="text-sm font-medium hover:underline underline-offset-4"
+											href="#"
+										>
+											Features
+										</Link>
+										<Link
+											className="text-sm font-medium hover:underline underline-offset-4"
+											href="#"
+										>
+											About
+										</Link>
+									</nav>
+
+									<div className="ml-4">
+										<HeaderAuth />
 									</div>
-									<HeaderAuth />
-								</div>
-							</nav>
+								</header>
+							</div>
 							<div className="flex flex-col gap-20 max-w-5xl p-5">
 								{children}
 							</div>
