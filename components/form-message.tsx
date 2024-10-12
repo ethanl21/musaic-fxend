@@ -9,7 +9,8 @@ export type Message =
 export function FormMessage({ message }: { message: Message }) {
 	if (
 		"error" in message &&
-		message.error_description.includes("Unverified email with spotify")
+		message.error_description && message.error_description.includes("Unverified email with spotify")
+		// message.error_description.includes("Unverified email with spotify")
 	) {
 		message.error_description =
 			"Check the email address associated with your Spotify account for a confirmation message, then try again.";
