@@ -1,15 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
-
-// components/SpotifyPlayer.tsx
-
-
-
 "use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Slider from "@/components/ui/Slider";
+import { SkipBack, SkipForward, Play, Pause, Volume2 } from "lucide-react";
 
 interface SpotifyPlayerProps {
   accessToken: string;
@@ -18,17 +12,17 @@ interface SpotifyPlayerProps {
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
-   
+    Spotify: any;
   }
 }
 
 const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ accessToken }) => {
-  const [player, setPlayer] = useState<>(null);
+  const [player, setPlayer] = useState<any>(null);
   const [deviceId, setDeviceId] = useState<string | null>(null);
-  const [playerState, setPlayerState] = useState<>(null);
+  const [playerState, setPlayerState] = useState<any>(null);
   const [isPremium, setIsPremium] = useState<boolean>(false);
-
-  // const supabase = createClientComponentClient();
+  const [volume, setVolume] = useState<number>(50);
+  const [position, setPosition] = useState<number>(0);
 
   useEffect(() => {
     const checkPremium = async () => {
@@ -101,11 +95,10 @@ const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ accessToken }) => {
       });
 
       // Player state changed
-      spotifyPlayer.addListener("player_state_changed", (state) => {
-        if (!state) {
-          return;
-        }
+      spotifyPlayer.addListener("player_state_changed", (state: any) => {
+        if (!state) return;
         setPlayerState(state);
+        setPosition(state.position); // Set the initial position
       });
 
       // Connect to the player!
@@ -120,6 +113,24 @@ const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ accessToken }) => {
       }
     };
   }, [accessToken, isPremium]);
+
+  // Poll the player state every second to update the position
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (playerState && !playerState.paused) {
+      interval = setInterval(() => {
+        player.getCurrentState().then((state: any) => {
+          if (state) {
+            setPosition(state.position);
+          }
+        });
+      }, 1000); // Update every second
+    }
+
+    // Clear the interval when the player is paused or the component is unmounted
+    return () => clearInterval(interval);
+  }, [playerState, player]);
 
   const play = async () => {
     if (!deviceId) {
@@ -136,11 +147,11 @@ const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ accessToken }) => {
           "Content-Type": "application/json",
         },
         data: {
-          uris: ["spotify:track:1VdZ0vKfR5jneCmWIUam9f"], // Replace with desired track URI
+          uris: ["spotify:track:3AJwUDP919kvQ9QcozQPxg"], // Replace with desired track URI
         },
       });
     } catch (error) {
-      console.error("Error starting playback:", error.response?.data);
+      console.error("Error starting playback:", error);
     }
   };
 
@@ -153,74 +164,116 @@ const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ accessToken }) => {
     try {
       await player.togglePlay();
     } catch (error) {
-      console.error("Error toggling play:", error.response?.data);
+      console.error("Error toggling play:", error);
     }
   };
 
-  const pause = async () => {
-    if (!deviceId) {
-      console.error("No device ID available.");
+  const skipToNext = async () => {
+    if (!player) {
+      console.error("Spotify Player is not initialized.");
       return;
     }
 
     try {
-      await axios({
-        method: "PUT",
-        url: `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      await player.nextTrack();
     } catch (error) {
-      console.error("Error pausing playback:", error.response?.data);
+      console.error("Error skipping to next track:", error);
     }
   };
 
+  const skipToPrevious = async () => {
+    if (!player) {
+      console.error("Spotify Player is not initialized.");
+      return;
+    }
+
+    try {
+      await player.previousTrack();
+    } catch (error) {
+      console.error("Error skipping to previous track:", error);
+    }
+  };
+
+  const handleVolumeChange = async (newVolume: number[]) => {
+    if (!player) {
+      console.error("Spotify Player is not initialized.");
+      return;
+    }
+
+    try {
+      await player.setVolume(newVolume[0] / 100);
+      setVolume(newVolume[0]);
+    } catch (error) {
+      console.error("Error changing volume:", error);
+    }
+  };
+
+  const formatTime = (ms: number) => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className="spotify-player p-6 bg-gray-800 text-white rounded-lg shadow-md">
-      <h2 className="text-2xl mb-4">Spotify Player</h2>
-      {playerState ? (
-        <div className="current-track mb-4">
-          <p className="text-lg">
-            Now Playing:{" "}
-            <span className="font-semibold">
-              {playerState.track_window.current_track.name}
-            </span>{" "}
-            by{" "}
-            <span className="font-semibold">
-              {playerState.track_window.current_track.artists
-                .map((artist) => artist.name)
-                .join(", ")}
-            </span>
-          </p>
-          <div className="controls space-x-2">
-            <button
-              onClick={togglePlay}
-              className="px-4 py-2 bg-green-500 rounded hover:bg-green-600 transition"
-            >
-              {playerState.paused ? "Play" : "Pause"}
-            </button>
-            <button
-              onClick={play}
-              className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition"
-            >
-              Start Playback
-            </button>
-            <button
-              onClick={pause}
-              className="px-4 py-2 bg-red-500 rounded hover:bg-red-600 transition"
-            >
-              Pause Playback
-            </button>
+    <div className="bg-black text-white p-8 rounded-lg max-w-6xl w-full mx-auto">
+      <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+        <img
+          src={playerState?.track_window.current_track.album.images[0]?.url || "/placeholder.svg?height=300&width=300"}
+          alt={`${playerState?.track_window.current_track.name || 'Album'} cover`}
+          className="w-64 h-64 rounded-md shadow-lg"
+        />
+        <div className="flex-1 w-full max-w-xl">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold mb-2">{playerState?.track_window.current_track.name || 'No track playing'}</h2>
+            <p className="text-xl text-gray-400">{playerState?.track_window.current_track.artists?.map((artist: any) => artist.name).join(', ') || 'Unknown artist'}</p>
+          </div>
+          
+          <div className="mb-8">
+            <Slider
+              value={[position || 0]}
+              max={playerState?.duration || 100}
+              step={1000}
+              onValueChange={(value) => player?.seek(value[0])}
+              className="w-full"
+            />
+            <div className="flex justify-between text-sm mt-2">
+              <span>{formatTime(position || 0)}</span>
+              <span>{formatTime(playerState?.duration || 0)}</span>
+            </div>
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-6">
+              <button onClick={skipToPrevious} className="text-gray-400 hover:text-white transition-colors" aria-label="Previous track">
+                <SkipBack size={32} />
+              </button>
+              <button onClick={togglePlay} className="bg-white text-black rounded-full p-4 hover:scale-105 transition-transform" aria-label={playerState?.paused ? "Play" : "Pause"}>
+                {playerState?.paused ? <Play size={32} fill="black" /> : <Pause size={32} fill="black" />}
+              </button>
+              <button onClick={skipToNext} className="text-gray-400 hover:text-white transition-colors" aria-label="Next track">
+                <SkipForward size={32} />
+              </button>
+            </div>
+            <div className="hidden md:flex items-center space-x-4">
+              <Volume2 size={24} />
+              <Slider
+                value={[volume]}
+                max={100}
+                step={1}
+                onValueChange={handleVolumeChange}
+                className="w-28"
+              />
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="no-track mb-4">
+      </div>
+      {!playerState && (
+        <div className="mt-4">
           <p>No track is currently playing.</p>
           <button
             onClick={play}
-            className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition"
+            className="mt-2 px-4 py-2 bg-white text-black rounded hover:bg-gray-200 transition"
           >
             Start Playback
           </button>

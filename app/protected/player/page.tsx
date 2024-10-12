@@ -7,7 +7,8 @@ const PlayerPage = async () => {
   const accessToken = session?.provider_token; // Ensure this is the Spotify access token
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen w-full flex items-center justify-center ">
+
       {accessToken ? (
         <SpotifyPlayer accessToken={accessToken} />
       ) : (
