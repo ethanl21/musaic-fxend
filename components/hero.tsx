@@ -7,11 +7,14 @@ export default function Header() {
 		<>
 			<div className="flex flex-col min-h-screen">
 				<main className="flex-1">
-					{/* (we'll replace this image later) */}
-					{/* 
-						eslint-disable-next-line @next/next/no-img-element 
-					*/ }
-					<img src="https://files.catbox.moe/c7ofe2.png" alt="placeholder logo" className="rounded-md max-h-72 mx-auto" />
+					<div className="h-96 max-h-96 bg-slate-100 p-8 rounded-md shadow-md w-fit mx-auto border-2">
+						{/* eslint-disable-next-line @next/next/no-img-element */}
+						<img
+							src="/musaic.png"
+							alt="Musaic logo"
+							className="obejct-contain w-auto h-full mx-auto"
+						/>
+					</div>
 					<section className="w-full py-12 md:py-12 lg:py-24 xl:py-32">
 						<div className="container px-4 md:px-6">
 							<div className="flex flex-col items-center space-y-4 text-center">
@@ -20,13 +23,13 @@ export default function Header() {
 										Discover Your Perfect Sound
 									</h1>
 									<p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-										Musaic uses AI to understand your taste and introduce you
-										to new artists and tracks you'll love.
+										Musaic uses AI to understand your taste and introduce you to
+										new artists and tracks you'll love.
 									</p>
 								</div>
 								<div className="space-x-4">
 									<Link
-										href="#"
+										href="/sign-up"
 										className={buttonVariants({ variant: "default" })}
 									>
 										Get Started
@@ -65,9 +68,9 @@ export default function Header() {
 								</div>
 								<div className="flex flex-col items-center space-y-3 text-center">
 									<Radio className="h-12 w-12 text-primary" />
-									<h3 className="text-xl font-bold">A Secret Third Thing</h3>
+									<h3 className="text-xl font-bold">Intelligent</h3>
 									<p className="text-sm text-gray-500 dark:text-gray-400">
-										Todo: fill this in later :)
+										Artificial Intelligence is used to suggest songs based on listening history or written descriptions.
 									</p>
 								</div>
 							</div>
